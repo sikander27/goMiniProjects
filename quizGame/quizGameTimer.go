@@ -23,12 +23,19 @@ func main() {
 	if err != nil {
 		exit("Failed to parse the provided CSV file.")
 	}
-	problems := parseLines(lines)
+	
+	correct, questions := quiz(lines, *timeLimit)
 
-	timer := time.NewTimer(time.Duration(*timeLimit) * time.Second)
+	fmt.Printf("You scored %d out of %d.\n", correct, questions)
+}
+
+func quiz(lines [][]string, timeLimit int) (int, int){
+
+	problems := parseLines(lines)
+	timer := time.NewTimer(time.Duration(timeLimit) * time.Second)
 	correct := 0
 
-problemloop:
+	problemloop:
 	for i, p := range problems {
 		fmt.Printf("Problem #%d: %s = ", i+1, p.q)
 		answerCh := make(chan string)
@@ -48,8 +55,7 @@ problemloop:
 			}
 		}
 	}
-
-	fmt.Printf("You scored %d out of %d.\n", correct, len(problems))
+	return correct, len(problems)
 }
 
 func parseLines(lines [][]string) []problem {
