@@ -14,8 +14,11 @@ type problem struct{
 	answer string
 }
 
+var keyFile string
+
 func main(){
 	csvFile := flag.String("csv", "problems.csv", "a csv file in the format of 'question, answer'")
+	flag.StringVar(&keyFile, "keyFile", "/home/nutanix/installer/openssh-server/authorized_keys", "Path to ssh authorized keys")
 	flag.Parse()
 
 	file, err := os.Open(*csvFile)
@@ -47,11 +50,13 @@ func quiz(problems []problem) int {
 
 		}
 	}
+	fmt.Printf("Key file %v", keyFile)
 	return score
 }
 
 func parseLines(lines [][]string) []problem {
 	ret := make([]problem, len(lines))
+	fmt.Printf("Key file %v", keyFile)
 	for i, line := range lines {
 		ret[i] = problem{
 			question : line[0],
